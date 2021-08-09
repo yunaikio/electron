@@ -238,4 +238,5 @@ after_build:
     }
 
 on_image_bake:
-- ps: echo "Baking image: $env:APPVEYOR_BAKE_IMAGE"
+- ps: >-
+    echo "Baking image: $env:APPVEYOR_BAKE_IMAGE"
