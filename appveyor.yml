@@ -231,3 +231,11 @@ deploy_script:
       } elseif (Test-Path Env:\TEST_WOA) {
         node script/release/ci-release-build.js --job=electron-woa-testing --ci=VSTS --armTest --appveyorJobId=$env:APPVEYOR_JOB_ID $env:APPVEYOR_REPO_BRANCH
       }
+after_build:
+- ps: |
+    if ($env:APPVEYOR_REPO_BRANCH -eq 'test-bake-image') {
+      $env:APPVEYOR_BAKE_IMAGE = 'electron-test-bake-image'
+    }
+
+on_image_bake:
+- ps: echo "Baking image: $env:APPVEYOR_BAKE_IMAGE"
