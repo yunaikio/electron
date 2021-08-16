@@ -28,8 +28,8 @@
 #  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 version: 1.0.{build}
-build_cloud: electron-16-core
-image: vs2019bt-16.6.2
+build_cloud: electron-16-core2
+image: base-electron
 environment:
   GIT_CACHE_PATH: C:\Users\electron\libcc_cache
   ELECTRON_OUT_DIR: Default
@@ -48,6 +48,12 @@ notifications:
     on_build_failure: true
     on_build_status_changed: false
 build_script:
+  - ps: >-
+      if ($env:APPVEYOR_REPO_BRANCH -eq 'test-bake-image') {
+        echo "WE HAVE THE RIGHT BRANCH"
+      } else {
+        echo "WE HAVE THE WRONG BRANCH: $env:APPVEYOR_REPO_BRANCH"
+      }
   - ps: >-
       if(($env:APPVEYOR_PULL_REQUEST_HEAD_REPO_NAME -split "/")[0] -eq ($env:APPVEYOR_REPO_NAME -split "/")[0]) {
         Write-warning "Skipping PR build for branch"; Exit-AppveyorBuild
@@ -233,9 +239,7 @@ deploy_script:
       }
 after_build:
 - ps: |
-    if ($env:APPVEYOR_REPO_BRANCH -eq 'test-bake-image') {
-      $env:APPVEYOR_BAKE_IMAGE = 'electron-test-bake-image'
-    }
+    $env:APPVEYOR_BAKE_IMAGE = 'electron-test-bake-image'
 
 on_image_bake:
 - ps: >-
