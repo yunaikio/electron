@@ -496,6 +496,8 @@ step-gn-check: &step-gn-check
       # Check the hunspell filenames
       node electron/script/gen-hunspell-filenames.js --check
       node electron/script/gen-libc++-filenames.js --check
+      # Check for crash buildflag header
+      gn check out/Default //components/crash/core/common:crash_buildflags
 
 step-electron-build: &step-electron-build
   run:
@@ -647,6 +649,7 @@ step-persist-data-for-tests: &step-persist-data-for-tests
       - src/out/Default/chromedriver.zip
       - src/out/Default/shell_browser_ui_unittests
       - src/out/Default/gen/node_headers
+      - src/out/Default/gen/components/crash
       - src/out/ffmpeg/ffmpeg.zip
       - src/electron
       - src/third_party/electron_node
