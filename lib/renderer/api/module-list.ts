@@ -6,10 +6,3 @@ export const rendererModuleList: ElectronInternal.ModuleEntry[] = [
   { name: 'nativeImage', loader: () => require('./native-image') },
   { name: 'webFrame', loader: () => require('./web-frame') }
 ];
-
-if (BUILDFLAG(ENABLE_DESKTOP_CAPTURER)) {
-  rendererModuleList.push({
-    name: 'desktopCapturer',
-    loader: () => require('@electron/internal/renderer/api/desktop-capturer')
-  });
-}
