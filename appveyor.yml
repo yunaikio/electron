@@ -68,7 +68,7 @@ build_script:
 
           Write-Host "ABOUT TO RUN DOC ONLY CHANGE"
 
-          # $result = node script/doc-only-change.js --prNumber=$env:APPVEYOR_PULL_REQUEST_NUMBER --prBranch=$env:APPVEYOR_REPO_BRANCH
+          $result = node script/doc-only-change.js --prNumber=$env:APPVEYOR_PULL_REQUEST_NUMBER --prBranch=$env:APPVEYOR_REPO_BRANCH
 
           Write-Host "ABOUT TO check exit code"
 
@@ -86,10 +86,10 @@ build_script:
           Write-Host "IN CATCH"
         } finally {
           Write-Host "setting should exit to 0"
-          $host.SetShouldExit(0)
+          $global:LASTEXITCODE = 0
         }
       }
-  - Write-Host "Building $env:GN_CONFIG build"
+  - echo "Building $env:GN_CONFIG build"
   - git config --global core.longpaths true
   - cd ..
   - git clone --depth=1 https://chromium.googlesource.com/chromium/tools/depot_tools.git
