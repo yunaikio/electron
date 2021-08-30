@@ -50,18 +50,31 @@ notifications:
     on_build_status_changed: false
 build_script:
   - ps: >-
+      echo "Starting checks"
       if(($env:APPVEYOR_PULL_REQUEST_HEAD_REPO_NAME -split "/")[0] -eq ($env:APPVEYOR_REPO_NAME -split "/")[0]) {
+        echo "Skipping PR build for branch"
         Write-warning "Skipping PR build for branch"; Exit-AppveyorBuild
       } else {
+        echo "START DOC CHECK"
         try {
+          echo "ABOUT TO NODE INSTALL"
           node script/yarn.js install --frozen-lockfile
-
+          echo "ABOUT TO RUN DOC ONLY CHANGE"
           $result = node script/doc-only-change.js --prNumber=$env:APPVEYOR_PULL_REQUEST_NUMBER --prBranch=$env:APPVEYOR_REPO_BRANCH
+          echo "ABOUT TO write out result"
           Write-Output $result
+          echo "ABOUT TO check exit code"
           if ($result.ExitCode -eq 0) {
+            echo "DOC ONLY CHANGE; SKIPPING BUILD"            
             Write-warning "Skipping build for doc only change"; Exit-AppveyorBuild
+            echo "DONE; SKIPPING BUILD"
           }
+        } catch {
+          Write-Host "An error occurred:"
+          Write-Host $_
+          echo "IN CATCH"
         } finally {
+          echo "setting should exit to 0"
           $host.SetShouldExit(0)
         }
       }
