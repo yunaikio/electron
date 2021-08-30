@@ -31,7 +31,7 @@ version: 1.0.{build}
 build_cloud: electron-16-core
 image: vs2019bt-16.6.2
 environment:
-  GIT_CACHE_PATH: C:\Users\appveyor\libcc_cache
+  GIT_CACHE_PATH: C:\Users\electron\libcc_cache
   ELECTRON_OUT_DIR: Default
   ELECTRON_ENABLE_STACK_DUMPING: 1
   MOCHA_REPORTER: mocha-multi-reporters
@@ -58,9 +58,8 @@ build_script:
   - echo "Building $env:GN_CONFIG build"
   - git config --global core.longpaths true
   - cd ..
-  - git clone --depth=1 https://chromium.googlesource.com/chromium/tools/depot_tools.git
-  - ps: $env:PATH="$env:PATH;$pwd\depot_tools"
   - mkdir src
+  - update_depot_tools.bat
   - ps: Move-Item $env:APPVEYOR_BUILD_FOLDER -Destination src\electron
   - ps: $env:CHROMIUM_BUILDTOOLS_PATH="$pwd\src\buildtools"
   - ps: >-
