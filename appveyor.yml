@@ -68,7 +68,7 @@ build_script:
 
           Write-Host "ABOUT TO RUN DOC ONLY CHANGE"
 
-          $result = node script/doc-only-change.js --prNumber=$env:APPVEYOR_PULL_REQUEST_NUMBER --prBranch=$env:APPVEYOR_REPO_BRANCH
+          # $result = node script/doc-only-change.js --prNumber=$env:APPVEYOR_PULL_REQUEST_NUMBER --prBranch=$env:APPVEYOR_REPO_BRANCH
 
           Write-Host "ABOUT TO check exit code"
 
