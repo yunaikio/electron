@@ -112,7 +112,10 @@ build_script:
 after_build:
 - ps: |
     if ($env:TARGET_ARCH -eq 'x64') {
+      echo "SETTING BAKE IMAGE"
       $env:APPVEYOR_BAKE_IMAGE = 'electron-test-bake-image'
+    } else {
+      echo "SKIPPING BAKE IMAGE for $env:TARGET_ARCH"
     }
 
 on_image_bake:
