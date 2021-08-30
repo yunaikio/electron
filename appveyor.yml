@@ -53,25 +53,25 @@ build_script:
       Write-Host "Starting checks"
 
       if(($env:APPVEYOR_PULL_REQUEST_HEAD_REPO_NAME -split "/")[0] -eq ($env:APPVEYOR_REPO_NAME -split "/")[0]) {
-        
+
         Write-Host "Skipping PR build for branch"
-        
+
         Write-warning "Skipping PR build for branch"; Exit-AppveyorBuild
       } else {
-        
+
         Write-Host "START DOC CHECK"
         try {
-        
+
           Write-Host "ABOUT TO NODE INSTALL"
+
           node script/yarn.js install --frozen-lockfile
 
           Write-Host "ABOUT TO RUN DOC ONLY CHANGE"
+
           $result = node script/doc-only-change.js --prNumber=$env:APPVEYOR_PULL_REQUEST_NUMBER --prBranch=$env:APPVEYOR_REPO_BRANCH
 
-          Write-Host "ABOUT TO write out result"
-          Write-Output $result
-
           Write-Host "ABOUT TO check exit code"
+
           if ($result.ExitCode -eq 0) {
 
             Write-Host "DOC ONLY CHANGE; SKIPPING BUILD"            
@@ -83,13 +83,9 @@ build_script:
         } catch {
           Write-Host "An error occurred:"
           Write-Host $_
-
           Write-Host "IN CATCH"
-
         } finally {
-
           Write-Host "setting should exit to 0"
-
           $host.SetShouldExit(0)
         }
       }
@@ -243,14 +239,14 @@ test_script:
       }
   - cd electron
   # CalculateNativeWinOcclusion is disabled due to https://bugs.chromium.org/p/chromium/issues/detail?id=1139022
-  - if "%RUN_TESTS%"=="true" ( Write-Host Running test suite & node script/yarn test -- --trace-uncaught --enable-logging --disable-features=CalculateNativeWinOcclusion )
+  - if "%RUN_TESTS%"=="true" ( echo Running test suite & node script/yarn test -- --trace-uncaught --enable-logging --disable-features=CalculateNativeWinOcclusion )
   - cd ..
-  - if "%RUN_TESTS%"=="true" ( Write-Host Verifying non proprietary ffmpeg & python electron\script\verify-ffmpeg.py --build-dir out\Default --source-root %cd% --ffmpeg-path out\ffmpeg )
-  - Write-Host "About to verify mksnapshot"
-  - if "%RUN_TESTS%"=="true" ( Write-Host Verifying mksnapshot & python electron\script\verify-mksnapshot.py --build-dir out\Default --source-root %cd% )
-  - Write-Host "Done verifying mksnapshot"
-  - if "%RUN_TESTS%"=="true" ( Write-Host Verifying chromedriver & python electron\script\verify-chromedriver.py --build-dir out\Default --source-root %cd% )
-  - Write-Host "Done verifying chromedriver"
+  - if "%RUN_TESTS%"=="true" ( echo Verifying non proprietary ffmpeg & python electron\script\verify-ffmpeg.py --build-dir out\Default --source-root %cd% --ffmpeg-path out\ffmpeg )
+  - echo "About to verify mksnapshot"
+  - if "%RUN_TESTS%"=="true" ( echo Verifying mksnapshot & python electron\script\verify-mksnapshot.py --build-dir out\Default --source-root %cd% )
+  - echo "Done verifying mksnapshot"
+  - if "%RUN_TESTS%"=="true" ( echo Verifying chromedriver & python electron\script\verify-chromedriver.py --build-dir out\Default --source-root %cd% )
+  - echo "Done verifying chromedriver"
 deploy_script:
   - cd electron
   - ps: >-
