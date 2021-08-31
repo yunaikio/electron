@@ -63,7 +63,6 @@ build_script:
   - echo "Building $env:GN_CONFIG build"
   - git config --global core.longpaths true
   - cd ..
-  - git clone --depth=1 https://chromium.googlesource.com/chromium/tools/depot_tools.git
   - ps: $env:PATH="$env:PATH;$pwd\depot_tools"  
   - mkdir src
   - ps: Move-Item $env:APPVEYOR_BUILD_FOLDER -Destination src\electron
