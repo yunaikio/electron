@@ -53,12 +53,10 @@ ifdescribe(process.platform !== 'win32' || process.arch !== 'arm64')('clipboard 
 
     it('returns title and url', () => {
       clipboard.writeBookmark('a title', 'https://electronjs.org');
-
-      const readBookmark = clipboard.readBookmark();
-      if (process.platform !== 'win32') {
-        expect(readBookmark.title).to.equal('a title');
-      }
-      expect(clipboard.readBookmark().url).to.equal('https://electronjs.org');
+      expect(clipboard.readBookmark()).to.deep.equal({
+        title: 'a title',
+        url: 'https://electronjs.org'
+      });
 
       clipboard.writeText('no bookmark');
       expect(clipboard.readBookmark()).to.deep.equal({
@@ -91,11 +89,7 @@ ifdescribe(process.platform !== 'win32' || process.arch !== 'arm64')('clipboard 
       expect(readImage.toDataURL()).to.equal(i.toDataURL());
 
       if (process.platform !== 'linux') {
-        if (process.platform !== 'win32') {
-          expect(clipboard.readBookmark()).to.deep.equal(bookmark);
-        } else {
-          expect(clipboard.readBookmark().url).to.equal(bookmark.url);
-        }
+        expect(clipboard.readBookmark()).to.deep.equal(bookmark);
       }
     });
   });

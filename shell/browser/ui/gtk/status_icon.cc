@@ -52,6 +52,7 @@ std::unique_ptr<views::StatusIconLinux> CreateLinuxStatusIcon(
   } else {
     return std::make_unique<GtkStatusIcon>(image, tool_tip);
   }
+  return nullptr;
 #endif
 }
 
