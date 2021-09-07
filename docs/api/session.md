@@ -204,10 +204,7 @@ const { app, BrowserWindow } = require('electron')
 let win = null
 
 app.whenReady().then(() => {
-  win = new BrowserWindow({
-    width: 800,
-    height: 600
-  })
+  win = new BrowserWindow()
 
   win.webContents.session.setPermissionCheckHandler((webContents, permission, requestingOrigin, details) => {
     if (permission === 'hid') {
@@ -216,8 +213,8 @@ app.whenReady().then(() => {
     }
   })
 
-  // Retrieve previously persisted devices from an (optional) store here
-  const grantedDevices = []
+  // Retrieve previously persisted devices from an (optional) persistent store
+  const grantedDevices = fetchGrantedDevices()
 
   win.webContents.session.setDevicePermissionHandler((details) => {
     if (new URL(details.origin).hostname === 'some-host' && details.deviceType === 'hid') {
@@ -260,7 +257,9 @@ Returns:
   * `device` [HIDDevice[]](structures/hid-device.md)
   * `webContents` [WebContents](web-contents.md)
 
-Emitted after `navigator.hid.requestDevice` has been called and `select-hid-device` has fired if a new HID device becomes available.  For example, this event will fire when a new USB device is plugged in.
+Emitted when a new HID device becomes available. For example, when a new USB device is plugged in.
+
+This event will only be emitted after `navigator.hid.requestDevice` has been called and `select-hid-device` has fired.
 
 #### Event: 'hid-device-removed'
 
@@ -668,9 +667,9 @@ permissions (eg when handling the `select-hid-device` event) and then read from 
 ```javascript
 const { session } = require('electron')
 const url = require('url')
-const grantedDevices = // Retrieve previously persisted devices from an (optional) store here
+const grantedDevices = getGrantedDevices() // Retrieve previously persisted device permissions
 
-session.fromPartition('some-partition').setDevicePermissionHandler((details) => {
+session.defaultSession.setDevicePermissionHandler((details) => {
   if (new URL(details.origin).hostname === 'some-host' && details.deviceType === 'hid') {
     if (details.device.vendorId === 123 && details.device.productId === 345) {
       // Always allow this type of device (this allows skipping the call to `navigator.hid.requestDevice` first)
